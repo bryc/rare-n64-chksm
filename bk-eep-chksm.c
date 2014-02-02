@@ -15,6 +15,7 @@ int main(void)
     uint64_t S3;
     int i;
 
+    S3 = (0x00000000ULL << 32) | 0x00000000;
     for (i = 0; i < NUMBYTES; i++)
     {
         T8 = bytes[i]; // LBU
