@@ -6,6 +6,8 @@
 #define EEPROM_MAXBLOCKS        64
 #define EEPROM_BLOCK_SIZE       8
 
+static void import_EEPROM(const char* filename);
+
 static unsigned char EEPROM[EEPROM_MAXBLOCKS * EEPROM_BLOCK_SIZE];
 
 void import_EEPROM(const char* filename)
@@ -14,19 +16,15 @@ void import_EEPROM(const char* filename)
     register int block, byte;
 
     stream = fopen(filename, "rb");
-    for (block = 0; block < EEPROM_MAXBLOCKS; block++)
-        for (byte = 0; byte < EEPROM_BLOCK_SIZE; byte++)
-            EEPROM[8*block + byte] = fgetc(stream);
-    fclose(stream);
-
-/* debugging the imported EEPROM, removed once stabilized */
-    printf("Loaded EEPROM:\n");
-    for (block = 0; block < EEPROM_MAXBLOCKS; block++)
+    if (stream == NULL)
     {
-        for (byte = 0; byte < EEPROM_BLOCK_SIZE; byte++)
-            printf("0x%02X ", EEPROM[8*block + byte]);
-        printf("\n");
+        printf("Failed to open \"%s\" for reading.\n", filename);
+        return;
     }
+    for (block = 0; block < EEPROM_MAXBLOCKS; block++)
+        for (byte = 0; byte < EEPROM_BLOCK_SIZE; byte++)
+            EEPROM[EEPROM_BLOCK_SIZE*block + byte] = fgetc(stream);
+    fclose(stream);
     return;
 }
 
