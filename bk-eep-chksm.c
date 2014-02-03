@@ -3,19 +3,43 @@
 
 #define NUMBYTES    28
 
-/*
- * The byte array off which the 32-bit checksum is calculated.
- * To test checksums on a non-zero buffer, initialize this array to non-zero.
- */
-static unsigned char bytes[NUMBYTES];
+#define EEPROM_MAXBLOCKS        64
+#define EEPROM_BLOCK_SIZE       8
+
+static unsigned char EEPROM[EEPROM_MAXBLOCKS * EEPROM_BLOCK_SIZE];
+
+void import_EEPROM(const char* filename)
+{
+    FILE* stream;
+    register int block, byte;
+
+    stream = fopen(filename, "rb");
+    for (block = 0; block < EEPROM_MAXBLOCKS; block++)
+        for (byte = 0; byte < EEPROM_BLOCK_SIZE; byte++)
+            EEPROM[8*block + byte] = fgetc(stream);
+    fclose(stream);
+
+/* debugging the imported EEPROM, removed once stabilized */
+    printf("Loaded EEPROM:\n");
+    for (block = 0; block < EEPROM_MAXBLOCKS; block++)
+    {
+        for (byte = 0; byte < EEPROM_BLOCK_SIZE; byte++)
+            printf("0x%02X ", EEPROM[8*block + byte]);
+        printf("\n");
+    }
+    return;
+}
 
 int main(void)
 {
     uint64_t A1, A2, A3=0x13108B3C1, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, S1, V0, AT;
     uint64_t S3;
+    unsigned char* bytes;
     int i;
 
+    bytes = EEPROM + 0x01E0;
     S3 = (0x00000000ULL << 32) | 0x00000000;
+    import_EEPROM("NBKE.EEP");
     for (i = 0; i < NUMBYTES; i++)
     {
         T8 = bytes[i]; // LBU
