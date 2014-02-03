@@ -32,13 +32,11 @@ void import_EEPROM(const char* filename)
 
 int main(void)
 {
-    uint64_t A1, A2, A3=0x13108B3C1, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, S1, V0, AT;
-    uint64_t S3;
+    uint64_t A1, A2, A3=0x13108B3C1, T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, S1=0, S3=0, V0, AT;
     unsigned char* bytes;
     int i;
 
     bytes = EEPROM + 0x01E0;
-    S3 = (0x00000000ULL << 32) | 0x00000000;
     import_EEPROM("NBKE.EEP");
     for (i = 0; i < NUMBYTES; i++)
     {
