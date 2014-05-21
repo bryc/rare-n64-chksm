@@ -64,7 +64,7 @@ int bkchk(unsigned char bytes[], int size, int isBT)
         x = (y >> 20 & 0xFFF) ^ y;
         A ^= x & 0xFFFFFFFF;
     }
-    printf("Checksum: %016llX\n", isBT ? (BT << 32) + (BT  ^A) : A);
+    printf("Checksum: %016llX\n", isBT ? (BT << 32) + (BT ^ A) : A);
 }
 
 int main(void)
