@@ -1,13 +1,15 @@
 #include <stdio.h>
-unsigned char BK_example[] =
-{ // Banjo-Kazooie save data. Checksum: 32C9A1E6
+
+// Banjo-Kazooie save data. Checksum: 32C9A1E6
+unsigned char BK_example[] = { 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00
 };
-unsigned char BT_example[] =
-{ // Banjo-Tooie save data. Checksum: 004A49F0955CF65E
+
+// Banjo-Tooie save data. Checksum: 004A49F0955CF65E
+unsigned char BT_example[] = { 
     0x4B, 0x48, 0x4A, 0x43, 0x01, 0x02, 0x1E, 0x00, 0x02, 0x01, 0x01, 0x03,
     0x1C, 0x00, 0x00, 0x0F, 0x92, 0x0F, 0x1B, 0x00, 0x00, 0x14, 0x60, 0x05,
     0x15, 0x13, 0x70, 0x1B, 0x31, 0x2A, 0x61, 0x25, 0xF7, 0x22, 0xAB, 0x07,
@@ -49,22 +51,26 @@ unsigned char BT_example[] =
 
 int bkchk(unsigned char bytes[], int size, int isBT)
 {
-    unsigned long long int x=0x13108B3C1, y, Z=0, A=0, BT;
-    int i;
-    for (i = 0; i < size; i++, Z += 7) {
-        x = ( x & 0x1FFFFFFFF ) + ( bytes[i] << (Z & 0xF) );
-        y = (x << 32) | (x >> 1)  ^  (x << 44) >> 32;
-        x = (y >> 20 & 0xFFF) ^ y;
-        A ^= x & 0xFFFFFFFF;
+    unsigned long long x, y, z, BT;
+    int i, j;
+    x = 0x13108B3C1, z = 0, j = 0;
+    
+    for(i = 0; i < size; i++, j = (j+7) & 0xF)
+    {
+        x = (x + (bytes[i] << j)) & 0x1FFFFFFFF;
+        y = ((x << 32) | (x >> 1)) ^ ((x << 44) >> 32);
+        x = ((y >> 20) & 0xFFF) ^ y;
+        z = (z ^ x) & 0xFFFFFFFF;
     }
-    BT = A; // Get S3 after first loop. Used by BT
-    for (i -= 1; i >= 0; i--, Z += 3) {
-        x = ( x & 0x1FFFFFFFF ) + ( bytes[i] << (Z & 0xF) );
-        y = (x << 32) | (x >> 1)  ^  (x << 44) >> 32;
-        x = (y >> 20 & 0xFFF) ^ y;
-        A ^= x & 0xFFFFFFFF;
+    BT = z; // Get value after first loop. Used by BT
+    for(i--; i >= 0; i--, j = (j+3) & 0xF)
+    {
+        x = (x + (bytes[i] << j)) & 0x1FFFFFFFF;
+        y = ((x << 32) | (x >> 1)) ^ ((x << 44) >> 32);
+        x = ((y >> 20) & 0xFFF) ^ y;
+        z = (z ^ x) & 0xFFFFFFFF;
     }
-    printf("Checksum: %016llX\n", isBT ? (BT << 32) + (BT ^ A) : A);
+    printf("Checksum: %016llX\n", isBT ? (BT << 32) + (BT ^ z) : z);
 }
 
 int main(void)
