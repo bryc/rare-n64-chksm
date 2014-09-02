@@ -1,6 +1,13 @@
 #include <stdio.h>
 
 /*
+  WARNING! The 32-bit method is not as accurate as the main 64-bit version.  In very rare circumstances, the checksum
+  will be incorrect. I ran two algorithms on random data in parallel, catching mismatches.
+  I inserted the random data directly into RDRAM to see the game calculate the legitimate checksum.
+  The 32-bit checksum was incorrect, while the 64-bit one was correct.
+  
+  Use this only for testing or if you need a 32-bit implementation (JS, non-64 bit computer etc).
+
   BK/BT Algorithm (32 bit int)
   -----------------------------
   The original MIPS algorithm used 64 bits. This version uses 32 bits.
