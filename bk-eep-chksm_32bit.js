@@ -1,4 +1,7 @@
 /*
+  WARNING! This method has been proven to produce invalid checksums in rare circumstances.
+  Unless you need a 32-bit implementation for testing, stick to the 64-bit algorithm for now.
+
   BK/BT Algorithm (Javascript)
   -----------------------------
   This shows the checksum algorithm in pure JS, using the 32-bit code.
