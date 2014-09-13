@@ -49,28 +49,28 @@ unsigned char BT_example[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-int bkchk(unsigned char bytes[], int size, int isBT)
+int bkchk(unsigned char data[], int size, int isBT)
 {
-    unsigned long long x, y, z, BT;
-    int i, j;
-    x = 0x13108B3C1, z = 0, j = 0;
+    unsigned long long value, value2, checksum, BT;
+    int bp, sd;
+    value = 0x13108B3C1, checksum = 0, sd = 0;
     
-    for(i = 0; i < size; i++, j = (j+7) & 0xF)
+    for(bp = 0; bp < size; bp++, sd = (sd + 7) & 0xF)
     {
-        x = (x + (bytes[i] << j)) & 0x1FFFFFFFF;
-        y = ((x << 32) | (x >> 1)) ^ ((x << 44) >> 32);
-        x = ((y >> 20) & 0xFFF) ^ y;
-        z = (z ^ x) & 0xFFFFFFFF;
+    value    = value + (data[bp] << (sd & 0x0F)) & 0x1FFFFFFFF;
+    value2   = (value >> 1 | value << 32) ^ (value << 44) >> 32;
+    value    = value2 ^ (value2 >> 20) & 0x0FFF;
+    checksum = (value ^ checksum) & 0xFFFFFFFF;
     }
-    BT = z; // Get value after first loop. Used by BT
-    for(i--; i >= 0; i--, j = (j+3) & 0xF)
+    BT = checksum; // Get value after first loop. Used by BT
+    for(bp--; bp >= 0; bp--, sd = (sd + 3) & 0xF)
     {
-        x = (x + (bytes[i] << j)) & 0x1FFFFFFFF;
-        y = ((x << 32) | (x >> 1)) ^ ((x << 44) >> 32);
-        x = ((y >> 20) & 0xFFF) ^ y;
-        z = (z ^ x) & 0xFFFFFFFF;
+    value    = value + (data[bp] << (sd & 0x0F)) & 0x1FFFFFFFF;
+    value2   = (value >> 1 | value << 32) ^ (value << 44) >> 32;
+    value    = value2 ^ (value2 >> 20) & 0x0FFF;
+    checksum = (value ^ checksum) & 0xFFFFFFFF;
     }
-    printf("Checksum: %016llX\n", isBT ? (BT << 32) + (BT ^ z) : z);
+    printf("%s Checksum: %016llX\n", isBT ? "BT" : "BK", isBT ? (BT << 32) + (BT ^ checksum) : checksum);
 }
 
 int main(void)
