@@ -4,8 +4,8 @@ BK/BT Checksum Algorithm Reference Implementation (bryc)
 This version attempts to replicate the algorithm as closely as possible, following the asm line by line. 
 It is pretty accurate (I'd say), but not very optimized.
 
-If you put a breakpoint on `PC=8025C20C`, it will halt immediately after the algorithm
-has finished, andthe checksum values are in S3 and S4.
+If you put a breakpoint on `PC=8025C20C` in BK, it will halt immediately after the algorithm
+has finished, and the checksum values are in S3 and S4.
 You can compare the registers at this breakpoint with the output of this program.
 
 BK's final checksum is S3 ^ S4. BT's final checksum is (S3 << 32) + S4.
