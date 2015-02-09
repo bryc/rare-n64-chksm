@@ -1,0 +1,157 @@
+<textarea></textarea>
+<div></div>
+
+<style>
+body{margin:8px;font-family:monospace;font-size:16px}
+textarea{text-transform: uppercase;font-size:14px;resize:none;height:256px;width:100%}
+</style>
+
+<script>
+(function()
+{
+
+/******************************************************************************
+ * Start Math.long code (for 64-bit bitwise number support)
+ *****************************************************************************/
+ 
+Math.long=function(e,t){this.low_=e|0;this.high_=t|0};Math.long.IntCache_={};Math.long.fromInt=function(e){if(-128<=e&&e<128){var t=Math.long.IntCache_[e];if(t){return t}}var n=new Math.long(e|0,e<0?-1:0);if(-128<=e&&e<128){Math.long.IntCache_[e]=n}return n};Math.long.fromNumber=function(e){if(isNaN(e)||!isFinite(e)){return Math.long.ZERO}else if(e<=-Math.long.TWO_PWR_63_DBL_){return Math.long.MIN_VALUE}else if(e+1>=Math.long.TWO_PWR_63_DBL_){return Math.long.MAX_VALUE}else if(e<0){return Math.long.fromNumber(-e).negate()}else{return new Math.long(e%Math.long.TWO_PWR_32_DBL_|0,e/Math.long.TWO_PWR_32_DBL_|0)}};Math.long.fromBits=function(e,t){return new Math.long(e,t)};Math.long.fromString=function(e,t){if(e.length==0){throw Error("number format error: empty string")}var n=t||10;if(n<2||36<n){throw Error("radix out of range: "+n)}if(e.charAt(0)=="-"){return Math.long.fromString(e.substring(1),n).negate()}else if(e.indexOf("-")>=0){throw Error('number format error: interior "-" character: '+e)}var r=Math.long.fromNumber(Math.pow(n,8));var i=Math.long.ZERO;for(var s=0;s<e.length;s+=8){var o=Math.min(8,e.length-s);var u=parseInt(e.substring(s,s+o),n);if(o<8){var a=Math.long.fromNumber(Math.pow(n,o));i=i.multiply(a).add(Math.long.fromNumber(u))}else{i=i.multiply(r);i=i.add(Math.long.fromNumber(u))}}return i};Math.long.TWO_PWR_16_DBL_=1<<16;Math.long.TWO_PWR_24_DBL_=1<<24;Math.long.TWO_PWR_32_DBL_=Math.long.TWO_PWR_16_DBL_*Math.long.TWO_PWR_16_DBL_;Math.long.TWO_PWR_31_DBL_=Math.long.TWO_PWR_32_DBL_/2;Math.long.TWO_PWR_48_DBL_=Math.long.TWO_PWR_32_DBL_*Math.long.TWO_PWR_16_DBL_;Math.long.TWO_PWR_64_DBL_=Math.long.TWO_PWR_32_DBL_*Math.long.TWO_PWR_32_DBL_;Math.long.TWO_PWR_63_DBL_=Math.long.TWO_PWR_64_DBL_/2;Math.long.ZERO=Math.long.fromInt(0);Math.long.ONE=Math.long.fromInt(1);Math.long.NEG_ONE=Math.long.fromInt(-1);Math.long.MAX_VALUE=Math.long.fromBits(4294967295|0,2147483647|0);Math.long.MIN_VALUE=Math.long.fromBits(0,2147483648|0);Math.long.TWO_PWR_24_=Math.long.fromInt(1<<24);Math.long.prototype.toInt=function(){return this.low_};Math.long.prototype.toNumber=function(){return this.high_*Math.long.TWO_PWR_32_DBL_+this.getLowBitsUnsigned()};Math.long.prototype.toString=function(e){var t=e||10;if(t<2||36<t){throw Error("radix out of range: "+t)}if(this.isZero()){return"0"}if(this.isNegative()){if(this.equals(Math.long.MIN_VALUE)){var n=Math.long.fromNumber(t);var r=this.div(n);var i=r.multiply(n).subtract(this);return r.toString(t)+i.toInt().toString(t)}else{return"-"+this.negate().toString(t)}}var s=Math.long.fromNumber(Math.pow(t,6));var i=this;var o="";while(true){var u=i.div(s);var a=i.subtract(u.multiply(s)).toInt();var f=a.toString(t);i=u;if(i.isZero()){return f+o}else{while(f.length<6){f="0"+f}o=""+f+o}}};Math.long.prototype.getHighBits=function(){return this.high_};Math.long.prototype.getLowBits=function(){return this.low_};Math.long.prototype.getLowBitsUnsigned=function(){return this.low_>=0?this.low_:Math.long.TWO_PWR_32_DBL_+this.low_};Math.long.prototype.getNumBitsAbs=function(){if(this.isNegative()){if(this.equals(Math.long.MIN_VALUE)){return 64}else{return this.negate().getNumBitsAbs()}}else{var e=this.high_!=0?this.high_:this.low_;for(var t=31;t>0;t--){if((e&1<<t)!=0){break}}return this.high_!=0?t+33:t+1}};Math.long.prototype.isZero=function(){return this.high_==0&&this.low_==0};Math.long.prototype.isNegative=function(){return this.high_<0};Math.long.prototype.isOdd=function(){return(this.low_&1)==1};Math.long.prototype.equals=function(e){return this.high_==e.high_&&this.low_==e.low_};Math.long.prototype.notEquals=function(e){return this.high_!=e.high_||this.low_!=e.low_};Math.long.prototype.lessThan=function(e){return this.compare(e)<0};Math.long.prototype.lessThanOrEqual=function(e){return this.compare(e)<=0};Math.long.prototype.greaterThan=function(e){return this.compare(e)>0};Math.long.prototype.greaterThanOrEqual=function(e){return this.compare(e)>=0};Math.long.prototype.compare=function(e){if(this.equals(e)){return 0}var t=this.isNegative();var n=e.isNegative();if(t&&!n){return-1}if(!t&&n){return 1}if(this.subtract(e).isNegative()){return-1}else{return 1}};Math.long.prototype.negate=function(){if(this.equals(Math.long.MIN_VALUE)){return Math.long.MIN_VALUE}else{return this.not().add(Math.long.ONE)}};Math.long.prototype.add=function(e){var t=this.high_>>>16;var n=this.high_&65535;var r=this.low_>>>16;var i=this.low_&65535;var s=e.high_>>>16;var o=e.high_&65535;var u=e.low_>>>16;var a=e.low_&65535;var f=0,l=0,c=0,h=0;h+=i+a;c+=h>>>16;h&=65535;c+=r+u;l+=c>>>16;c&=65535;l+=n+o;f+=l>>>16;l&=65535;f+=t+s;f&=65535;return Math.long.fromBits(c<<16|h,f<<16|l)};Math.long.prototype.subtract=function(e){return this.add(e.negate())};Math.long.prototype.multiply=function(e){if(this.isZero()){return Math.long.ZERO}else if(e.isZero()){return Math.long.ZERO}if(this.equals(Math.long.MIN_VALUE)){return e.isOdd()?Math.long.MIN_VALUE:Math.long.ZERO}else if(e.equals(Math.long.MIN_VALUE)){return this.isOdd()?Math.long.MIN_VALUE:Math.long.ZERO}if(this.isNegative()){if(e.isNegative()){return this.negate().multiply(e.negate())}else{return this.negate().multiply(e).negate()}}else if(e.isNegative()){return this.multiply(e.negate()).negate()}if(this.lessThan(Math.long.TWO_PWR_24_)&&e.lessThan(Math.long.TWO_PWR_24_)){return Math.long.fromNumber(this.toNumber()*e.toNumber())}var t=this.high_>>>16;var n=this.high_&65535;var r=this.low_>>>16;var i=this.low_&65535;var s=e.high_>>>16;var o=e.high_&65535;var u=e.low_>>>16;var a=e.low_&65535;var f=0,l=0,c=0,h=0;h+=i*a;c+=h>>>16;h&=65535;c+=r*a;l+=c>>>16;c&=65535;c+=i*u;l+=c>>>16;c&=65535;l+=n*a;f+=l>>>16;l&=65535;l+=r*u;f+=l>>>16;l&=65535;l+=i*o;f+=l>>>16;l&=65535;f+=t*a+n*u+r*o+i*s;f&=65535;return Math.long.fromBits(c<<16|h,f<<16|l)};Math.long.prototype.div=function(e){if(e.isZero()){throw Error("division by zero")}else if(this.isZero()){return Math.long.ZERO}if(this.equals(Math.long.MIN_VALUE)){if(e.equals(Math.long.ONE)||e.equals(Math.long.NEG_ONE)){return Math.long.MIN_VALUE}else if(e.equals(Math.long.MIN_VALUE)){return Math.long.ONE}else{var t=this.shiftRight(1);var n=t.div(e).shiftLeft(1);if(n.equals(Math.long.ZERO)){return e.isNegative()?Math.long.ONE:Math.long.NEG_ONE}else{var r=this.subtract(e.multiply(n));var i=n.add(r.div(e));return i}}}else if(e.equals(Math.long.MIN_VALUE)){return Math.long.ZERO}if(this.isNegative()){if(e.isNegative()){return this.negate().div(e.negate())}else{return this.negate().div(e).negate()}}else if(e.isNegative()){return this.div(e.negate()).negate()}var s=Math.long.ZERO;var r=this;while(r.greaterThanOrEqual(e)){var n=Math.max(1,Math.floor(r.toNumber()/e.toNumber()));var o=Math.ceil(Math.log(n)/Math.LN2);var u=o<=48?1:Math.pow(2,o-48);var a=Math.long.fromNumber(n);var f=a.multiply(e);while(f.isNegative()||f.greaterThan(r)){n-=u;a=Math.long.fromNumber(n);f=a.multiply(e)}if(a.isZero()){a=Math.long.ONE}s=s.add(a);r=r.subtract(f)}return s};Math.long.prototype.modulo=function(e){return this.subtract(this.div(e).multiply(e))};Math.long.prototype.not=function(){return Math.long.fromBits(~this.low_,~this.high_)};Math.long.prototype.and=function(e){return Math.long.fromBits(this.low_&e.low_,this.high_&e.high_)};Math.long.prototype.or=function(e){return Math.long.fromBits(this.low_|e.low_,this.high_|e.high_)};Math.long.prototype.xor=function(e){return Math.long.fromBits(this.low_^e.low_,this.high_^e.high_)};Math.long.prototype.shiftLeft=function(e){e&=63;if(e==0){return this}else{var t=this.low_;if(e<32){var n=this.high_;return Math.long.fromBits(t<<e,n<<e|t>>>32-e)}else{return Math.long.fromBits(0,t<<e-32)}}};Math.long.prototype.shiftRight=function(e){e&=63;if(e==0){return this}else{var t=this.high_;if(e<32){var n=this.low_;return Math.long.fromBits(n>>>e|t<<32-e,t>>e)}else{return Math.long.fromBits(t>>e-32,t>=0?0:-1)}}};Math.long.prototype.shiftRightUnsigned=function(e){e&=63;if(e==0){return this}else{var t=this.high_;if(e<32){var n=this.low_;return Math.long.fromBits(n>>>e|t<<32-e,t>>>e)}else if(e==32){return Math.long.fromBits(t,0)}else{return Math.long.fromBits(t>>>e-32,0)}}}
+
+/******************************************************************************
+ * End Math.long code (for 64-bit bitwise number support)
+ *****************************************************************************/
+
+
+var zero = function(str)
+{
+    str = (str>>>0).toString(16).toUpperCase();
+    for(i=0, z=''; i < 8; i++) {z += '0'}
+    return (z+str).slice(-8);
+};
+
+var long = function(x)
+{
+    return Math.long.fromNumber(x);
+}
+
+    var b = document.querySelector("textarea");
+
+    function chk(data)
+    {
+        var value    = long(0x13108B3C1);
+        var value2;
+        var checksum = long(0);
+        var bp       = 0;
+        var sd       = 0;
+        var s        = data.length;
+        
+        function algo()
+        {
+            value    = value.add(long(data[bp]).shiftLeft(long(sd).and(long(0xF)))).and(long(0x1FFFFFFFF));
+            value2   = value.shiftLeft(0x3F).shiftRightUnsigned(0x1F).or(value.shiftRightUnsigned(1)).xor(value.shiftLeft(0x2C).shiftRightUnsigned(0x20));
+            value    = value2.shiftRightUnsigned(0x14).and(long(0xFFF)).xor(value2);
+            checksum = checksum.xor(value);
+        }
+        
+        for(; bp <  s; bp++, sd += 7)
+            algo();
+        var bt = checksum;
+        for(bp--; bp >= 0; bp--, sd += 3)
+            algo();
+        
+        return {
+            "BK" : zero(checksum),
+            "BT" : zero(bt) + zero(bt.xor(checksum))
+        }
+    }
+
+    b.addEventListener("dragover", function(e)
+    {
+        e.preventDefault();
+    });
+    b.addEventListener("drop", function(e)
+    {
+        e.preventDefault();
+    });
+
+    b.addEventListener("keydown", function(e)
+    {
+        var T = this.selectionEnd - this.selectionStart;
+        if (e.which == 46)
+        {
+            e.preventDefault();
+        }
+        else if (e.which == 8 && T > 0 && T !== this.value.length)
+        {
+            e.preventDefault();
+        }
+        else if (e.which == 8 && this.selectionEnd !== this.value.length)
+        {
+            e.preventDefault();
+        }
+    });
+
+    b.addEventListener("keypress", function(e)
+    {
+        if (false === /[0-9a-fA-F]/.test(String.fromCharCode(e.which)))
+        {
+            e.preventDefault();
+            return false;
+        }
+        else
+        {
+            if (this.selectionStart == this.selectionEnd)
+            {
+                this.selectionEnd += 1;
+            }
+            else if (" " === this.value.substring(this.selectionStart, this.selectionEnd))
+            {
+                e.preventDefault();
+            }
+            else if (this.selectionEnd - this.selectionStart == this.value.length)
+            {}
+            else if (this.selectionEnd - this.selectionStart > 1)
+            {
+                e.preventDefault();
+            }
+
+            if (" " === this.value.substring(this.selectionStart, this.selectionStart + 1))
+            {
+                this.selectionStart += 1;
+                this.selectionEnd += 1;
+            }
+        }
+    });
+
+    b.addEventListener("input", function lol(e)
+    {
+        var x = this.selectionStart,
+            y = this.selectionEnd;
+        this.value = this.value ? this.value.replace(/0x/g, "").replace(/[^0-9a-fA-F]/g, "").match(/.{1,2}/g).join(" ") : "";
+        if (this.selectionStart !== this.value.length)
+        {
+            this.selectionStart = x;
+            this.selectionEnd = y;
+        }
+        if (" " === this.value.substring(this.selectionStart, this.selectionStart + 1))
+        {
+
+            this.selectionStart += 1;
+        }
+
+        var data = this.value.split(" ");
+        var U = data.length - 1;
+        if (data[U].length < 2)
+        {
+            data[U] = data[U] + "0";
+        }
+        for (var i = 0; i < data.length; i++)
+        {
+            data[i] = parseInt(data[i], 16);
+        }
+
+        var cksm = chk(data);
+        
+        document.querySelector('div').innerHTML = cksm["BK"] + "<br>" + cksm["BT"];
+    });
+})();
+</script>
