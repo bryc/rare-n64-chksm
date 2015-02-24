@@ -1,5 +1,5 @@
 ### Rare's Checksum Algorithm
-This is an implementation of Rare's checksum algorithm in plain C. The algorithm was reverse-engineered from raw MIPS assembly. It is used in a couple of Rare's N64 titles to verify data integrity, notably in the EEPROM data. 
+This is an implementation of Rare's checksum algorithm in plain C. The algorithm was reverse-engineered from raw MIPS assembly using Nemu64's debugger. It is used in a couple of Rare's N64 titles to verify data integrity, notably in the EEPROM data. 
 
 Valid checksums can be generated from any number of bytes. This effectively allows checksums to be correct when arbitrarily modifying save data, or implemented in a save editor application.
 
