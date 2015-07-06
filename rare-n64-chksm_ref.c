@@ -10,15 +10,12 @@ You can compare the registers at this breakpoint with the output of this program
 
 BK's final checksum is S3 ^ S4. BT's final checksum is (S3 << 32) + S4.
 */
-
 #include <stdio.h>
 #include <stdint.h>
 
-int main(void)
-{
-    
+int main(void) {
+    int i;
     /* Initialize registers */
-    
     /* R0  */ uint64_t R0 = 0x00;
     /* R1  */ uint64_t AT = 0x01;
     /* R2  */ uint64_t V0 = 0x80283420;
@@ -52,7 +49,7 @@ int main(void)
     /* R30 */ uint64_t S8 = 0x00;
     /* R31 */ uint64_t RA = 0x8033C034;
     
-    uint64_t mem_DWORD  = 0x8F809F473108B3C1;
+    uint64_t mem_DWORD = 0x8F809F473108B3C1;
     
     unsigned char bytes[] = {
         0xC9, 0x08, 0xC5, 0x2F, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -64,9 +61,7 @@ int main(void)
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     };
 
-    int i;
-    for(i = 0; i < sizeof(bytes); i++)
-    {
+    for(i = 0; i < sizeof(bytes); i++) {
         T8 = bytes[i];
         T5 = (mem_DWORD & 0xFFFFFFFF);
         T9 = S1 & 0x000F;
@@ -96,12 +91,10 @@ int main(void)
         V0 = V0 >> (0x00 + 32);
         
         S3 = S3 ^ V0;
-        
         S1 = S1 + 0x0007;
     }
 
-    for(i = i - 1; i >= 0; i--)
-    {
+    for(i = i - 1; i >= 0; i--) {
         T1 = bytes[i];
         T3 = (mem_DWORD & 0xFFFFFFFF);
         T8 = S1 & 0x000F;
@@ -131,18 +124,14 @@ int main(void)
         V0 = V0 >> (0x00 + 32);
         
         S4 = S4 ^ V0;
-        
         S1 = S1 + 0x0003;
-        
     }
     
     printf("Result (%d bytes):\n", sizeof(bytes));
     printf("\tV0: %08llX\n", V0);
     printf("\tS3: %08llX\n", S3);
     printf("\tS4: %08llX\n\n", S4);
-    
     printf("\tBK: %08llX\n", S3 ^ S4);
     printf("\tBT: %016llX\n", (S3 << 32) + S4  );
-
     return 0;
 }
