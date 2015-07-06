@@ -38,32 +38,28 @@ unsigned char BT_example[] = {
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-int bkchk(unsigned char data[], int size, int isBT)
-{
+long long unsigned bkchk(unsigned char data[], int size, int isBT) {
     unsigned long long value, value2, checksum1, checksum2, BT;
     int bp, sd;
     value = 0x13108B3C1, sd = 0, checksum1 = 0, checksum2 = 0;
     
-    for(bp = 0; bp < size; bp++, sd = (sd + 7) & 0xF)
-    {
+    for(bp = 0; bp < size; bp++, sd = (sd + 7) & 0xF) {
         value     = value + (data[bp] << (sd & 0x0F)) & 0x1FFFFFFFF;
         value2    = (value >> 1 | value << 32) ^ (value << 44) >> 32;
         value     = value2 ^ (value2 >> 20) & 0x0FFF;
         checksum1 = (value ^ checksum1) & 0xFFFFFFFF;
     }
-    for(bp--; bp >= 0; bp--, sd = (sd + 3) & 0xF)
-    {
+    for(bp--; bp >= 0; bp--, sd = (sd + 3) & 0xF) {
         value     = value + (data[bp] << (sd & 0x0F)) & 0x1FFFFFFFF;
         value2    = (value >> 1 | value << 32) ^ (value << 44) >> 32;
         value     = value2 ^ (value2 >> 20) & 0x0FFF;
         checksum2 = (value ^ checksum2) & 0xFFFFFFFF;
     }
-    printf("%s Checksum: %016llX\n", isBT ? "BT" : "BK", isBT ? (checksum1 << 32) + checksum2 : checksum1 ^ checksum2);
+    return isBT ? (checksum1 << 32) + checksum2 : checksum1 ^ checksum2;
 }
 
-int main(void)
-{
-    bkchk(BK_example, sizeof(BK_example), 0);
-    bkchk(BT_example, sizeof(BT_example), 1);
+int main(void) {
+    printf("BK Checksum: %08llX\n",  bkchk(BK_example, sizeof(BK_example), 0));
+    printf("BT Checksum: %016llX\n", bkchk(BT_example, sizeof(BT_example), 1));
     return 0;
 }
