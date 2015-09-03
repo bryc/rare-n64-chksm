@@ -1,10 +1,5 @@
 ### Rare's Checksum Algorithm
-This is an implementation of Rare's checksum algorithm in plain C. The algorithm was reverse-engineered from raw MIPS assembly using Nemu64's debugger. It is used in a couple of Rare's N64 titles to verify data integrity, notably in the EEPROM data. 
-
-Valid checksums can be generated from any number of bytes. This effectively allows checksums to be correct when arbitrarily modifying save data, or when used in a save editor application.
-
-Generally speaking, the algorithm runs twice; once forwards, saving the result in `S3`, and then continuing in reverse, saving the result in `S4`. Both Goldeneye and Banjo-Tooie use `(S3 << 8) + S4` as the final checksum, resembling a 64-bit checksum, whereas Banjo-Kazooie uses `S3  ^ S4`; both checksums are XORed, resembling a 32-bit checksum.
-
+This is an implementation of Rare's checksum algorithm in plain C. It's used in a couple of Rare's N64 titles to verify data integrity, mostly in the EEPROM data. The algorithm was reverse-engineered using Nemu64's debugger. This allows checksums to be calculated on any input and can allow modification of save files.
 
 Games that use this checksum:
   1. Banjo Kazooie
