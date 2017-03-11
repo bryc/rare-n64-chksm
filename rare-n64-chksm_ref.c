@@ -37,8 +37,8 @@ int main(void) {
     /* R17 */ uint64_t S1 = 0x00;         // Shift value
     /* R19 */ uint64_t S3 = 0x00;         // Final checksum #1
     /* R20 */ uint64_t S4 = 0x00;         // Final checksum #2
-    /* R24 */ uint64_t T8 = 0x802816E8;
-    /* R25 */ uint64_t T9 = 0x80277370;
+    /* R24 */ uint64_t T8 = 0x00;
+    /* R25 */ uint64_t T9 = 0x00;
     
     uint64_t DWORD_MEM = (T6 << 32) + T7;
 
