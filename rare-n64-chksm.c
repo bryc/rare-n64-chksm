@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-// Banjo-Kazooie save data. Checksum: 32C9A1E6
+// Banjo-Kazooie test vector. Checksum: 32C9A1E6
 unsigned char BK_example[] = { 
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -8,7 +8,7 @@ unsigned char BK_example[] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-// Banjo-Tooie save data. Checksum: 004A49F0955CF65E
+// Banjo-Tooie test vector. Checksum: 004A49F0955CF65E
 unsigned char BT_example[] = { 
  0x4B, 0x48, 0x4A, 0x43, 0x01, 0x02, 0x1E, 0x00, 0x02, 0x01, 0x01, 0x03, 0x1C, 0x00, 0x00, 0x0F, 0x92,
  0x0F, 0x1B, 0x00, 0x00, 0x14, 0x60, 0x05, 0x15, 0x13, 0x70, 0x1B, 0x31, 0x2A, 0x61, 0x25, 0xF7, 0x22,
@@ -38,7 +38,7 @@ unsigned char BT_example[] = {
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-long long unsigned bkchk(unsigned char data[], int size, int isBT) {
+long long unsigned raresum(unsigned char data[], int size, int isBT) {
     unsigned long long value, value2, checksum1, checksum2, BT;
     int bp, sd;
     value = 0x13108B3C1, sd = 0, checksum1 = 0, checksum2 = 0;
@@ -59,7 +59,9 @@ long long unsigned bkchk(unsigned char data[], int size, int isBT) {
 }
 
 int main(void) {
-    printf("BK Checksum: %08llX\n",  bkchk(BK_example, sizeof(BK_example), 0));
-    printf("BT Checksum: %016llX\n", bkchk(BT_example, sizeof(BT_example), 1));
+    // Verify BK test vector
+    printf("BK Checksum: %08llX\n",  raresum(BK_example, sizeof(BK_example), 0));
+    // Verify BT test vector
+    printf("BT Checksum: %016llX\n", raresum(BT_example, sizeof(BT_example), 1));
     return 0;
 }
