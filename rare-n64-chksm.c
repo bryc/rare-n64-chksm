@@ -38,7 +38,7 @@ unsigned char BT_example[] = {
  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-long long unsigned raresum(unsigned char data[], int size, int isBT) {
+long long unsigned rarechksm(unsigned char data[], int size, int isBT) {
     unsigned long long value, value2, checksum1, checksum2, BT;
     int bp, sd;
     value = 0x13108B3C1, sd = 0, checksum1 = 0, checksum2 = 0;
@@ -60,8 +60,8 @@ long long unsigned raresum(unsigned char data[], int size, int isBT) {
 
 int main(void) {
     // Verify BK test vector
-    printf("BK Checksum: %08llX\n",  raresum(BK_example, sizeof(BK_example), 0));
+    printf("BK Checksum: %08llX\n",  rarechksm(BK_example, sizeof(BK_example), 0));
     // Verify BT test vector
-    printf("BT Checksum: %016llX\n", raresum(BT_example, sizeof(BT_example), 1));
+    printf("BT Checksum: %016llX\n", rarechksm(BT_example, sizeof(BT_example), 1));
     return 0;
 }
