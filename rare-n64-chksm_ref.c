@@ -4,16 +4,14 @@
     This version attempts to replicate the algorithm as closely as possible,
     following the asm line by line. It should be quite accurate to the original.
 
-    The Rare checksum algorithm is used in Banjo-Kazooie, Banjo-Tooie and Goldeneye 007.
-    Banjo-Kazooie's final checksum is S3 ^ S4, while Goldeneye and Tooie use (S3<<32)+S4
-
-    Note: This may not run properly on 32-bit machines as the Nintendo 64 uses 64-bit
-    arithmetic, which is what we are using here.
+    The Rare checksum algorithm is used in Banjo-Kazooie, Banjo-Tooie, Goldeneye 007 and Perfect Dark.
+    Banjo-Kazooie's final checksum is S3 ^ S4, while Goldeneye and Tooie use (S3<<32)+S4.
+    Perfect Dark uses (S3 & 0xFFFF) << 16 | S4 & 0xFFFF.
 */
 #include <stdio.h>
 #include <stdint.h>
 
-unsigned char bytes[] = { // checksum = 98593921AA9098C7
+unsigned char bytes[] = { // BK: 32C9A1E6, BT: 98593921AA9098C7
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00
