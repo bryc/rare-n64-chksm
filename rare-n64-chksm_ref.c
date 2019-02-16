@@ -115,5 +115,6 @@ int main(void) {
     printf("\tS4: %08llX\n\n", S4);
     printf("\tBK: %08llX\n"  , S3 ^ S4);
     printf("\tBT: %016llX\n" , (S3 << 32) + S4);
+    printf("\tPD: %08llX\n"  , (S3 & 0xFFFF) << 16 | S4 & 0xFFFF);
     return 0;
 }
