@@ -60,7 +60,8 @@ var long = function(x)
         
         return {
             "BK" : zero(checksum),
-            "BT" : zero(bt) + zero(bt.xor(checksum))
+            "BT" : zero(bt) + zero(bt.xor(checksum)),
+            "PD" : zero(bt.and(long(0xFFFF)).shiftLeft(16).or(bt.xor(checksum).and(long(0xFFFF))))
         }
     }
 
@@ -151,7 +152,7 @@ var long = function(x)
 
         var cksm = chk(data);
         
-        document.querySelector('div').innerHTML = cksm.BK + "<br>" + cksm.BT;
+        document.querySelector('div').innerHTML = cksm.BK + "<br>" + cksm.BT + "<br>" + cksm.PD;
     });
 })();
 </script>
