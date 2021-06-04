@@ -77,7 +77,7 @@ unsigned long long rarechksm(unsigned char data[], int size, int type) {
         sum ^= (sum >> 20) & 0xFFF;
     }
     switch(type) {
-        case 0: sum = (cksm0 << 32) + (unsigned int) cksm1; break;
+        case 0: sum = (cksm0 << 32) | (cksm1 & 0xFFFFFFFF); break;
         case 1: sum = (unsigned int) (cksm0 ^ cksm1); break;
         case 2: sum = (unsigned int) (cksm0 << 16) | (cksm1 & 0xFFFF); break;
     }
